@@ -8,6 +8,8 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { ProductEffects } from './state/product/products.effects';
 import { productReducer } from './state/product/products.reducer';
+import { orderReducer } from './state/order/order.reducer';
+import { OrderEffects } from './state/order/order.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideStore({ products: productReducer }),
-    provideEffects([ProductEffects])],
-    // provideStoreDevtools({ maxAge: 25, logOnly: false })
+    provideStore({ products: productReducer, orders: orderReducer }),
+    provideEffects([ProductEffects, OrderEffects])],
 };
