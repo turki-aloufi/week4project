@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { OrderService } from '../../services/order/order.service';
 import * as OrderActions from './order.actions';
 
@@ -12,17 +12,43 @@ export class OrderEffects {
   loadOrders$ = createEffect(() =>
     this.actions$.pipe(
       ofType(OrderActions.loadOrders),
-      tap(() => console.log('Load Orders action dispatched')),
       mergeMap(() =>
         this.orderService.getAllOrders().pipe(
-          tap(orders => console.log('Orders fetched:', orders)),
           map((orders) => OrderActions.loadOrdersSuccess({ orders })),
-          catchError((error) => {
-            console.error('Error fetching orders:', error);
-            return of(OrderActions.loadOrdersFailure({ error: error.message }));
-          })
+          catchError((error) => of(OrderActions.loadOrdersFailure({ error: error.message })))
         )
       )
+    )
+  );
+
+  addOrder$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OrderActions.addOrder),
+      mergeMap(({ order }) =>
+        this.orderService.createOrder(order).pipe(
+          map((createdOrder) => OrderActions.addOrderSuccess({ order: createdOrder })),
+          catchError((error) => of(OrderActions.addOrderFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  updateOrder$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OrderActions.updateOrder),
+      mergeMap(({ id, order }) =>
+        this.orderService.updateOrder(id, order).pipe(
+          map(() => OrderActions.updateOrderSuccess({ id })),
+          catchError((error) => of(OrderActions.updateOrderFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  updateOrderSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OrderActions.updateOrderSuccess),
+      map(() => OrderActions.loadOrders()) 
     )
   );
 
@@ -32,9 +58,7 @@ export class OrderEffects {
       mergeMap(({ id }) =>
         this.orderService.deleteOrder(id).pipe(
           map(() => OrderActions.deleteOrderSuccess({ id })),
-          catchError((error) =>
-            of(OrderActions.deleteOrderFailure({ error: error.message }))
-          )
+          catchError((error) => of(OrderActions.deleteOrderFailure({ error: error.message })))
         )
       )
     )

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Order, OrderCreateDto } from '../../services/order/order.service';
+import { Order, OrderDto } from '../../services/order/order.service';
 
 export const loadOrders = createAction('[Order] Load Orders');
 export const loadOrdersSuccess = createAction(
@@ -13,7 +13,7 @@ export const loadOrdersFailure = createAction(
 
 export const addOrder = createAction(
   '[Order] Add Order',
-  props<{ order: OrderCreateDto }>()
+  props<{ order: OrderDto }>()
 );
 export const addOrderSuccess = createAction(
   '[Order] Add Order Success',
@@ -26,7 +26,7 @@ export const addOrderFailure = createAction(
 
 export const updateOrder = createAction(
   '[Order] Update Order',
-  props<{ id: number; order: OrderCreateDto }>()
+  props<{ id: number; order: OrderDto }>() // Updated to OrderDto
 );
 export const updateOrderSuccess = createAction(
   '[Order] Update Order Success',

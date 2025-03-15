@@ -1,0 +1,106 @@
+<div class="container mt-4">
+  <!-- Loading and Error -->
+  <div *ngIf="loading$ | async" class="alert alert-info">Loading...</div>
+  <div *ngIf="error$ | async as error" class="alert alert-danger">Error: {{ error }}</div>
+
+  <!-- Order Cards -->
+  <h2>Orders</h2>
+  <button class="btn btn-primary mb-3" (click)="showAddOrderForm()">Add New Order</button>
+
+  <!-- Add Order Form -->
+  <div *ngIf="showAddForm" class="card mt-4">
+    <div class="card-header">Add Order</div>
+    <div class="card-body">
+      <form [formGroup]="addForm" (ngSubmit)="addOrder()">
+        <div formArrayName="orderProducts">
+          <div *ngFor="let item of addOrderProducts.controls; let i=index" [formGroupName]="i" class="mb-3">
+            <div class="row">
+              <div class="col">
+                <label [for]="'addProductId' + i" class="form-label">Product ID</label>
+                <input type="number" class="form-control" [id]="'addProductId' + i" formControlName="productId" required>
+                <div *ngIf="addOrderProducts.at(i).get('productId')?.invalid && addOrderProducts.at(i).get('productId')?.touched" class="text-danger">
+                  Product ID is required.
+                </div>
+              </div>
+              <div class="col">
+                <label [for]="'addQuantity' + i" class="form-label">Quantity</label>
+                <input type="number" class="form-control" [id]="'addQuantity' + i" formControlName="quantity" required>
+                <div *ngIf="addOrderProducts.at(i).get('quantity')?.invalid && addOrderProducts.at(i).get('quantity')?.touched" class="text-danger">
+                  Quantity is required and must be at least 1.
+                </div>
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-danger mt-4" (click)="removeProduct(addForm, i)">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary me-2" (click)="addProduct(addForm)">Add Product</button>
+        <button type="submit" class="btn btn-success me-2" [disabled]="addForm.invalid">Add Order</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Update Order Form -->
+  <div *ngIf="showUpdateForm" class="card mt-4">
+    <div class="card-header">Update Order</div>
+    <div class="card-body">
+      <form [formGroup]="updateForm" (ngSubmit)="updateOrder()">
+        <div class="mb-3">
+          <label for="updateId" class="form-label">ID</label>
+          <input type="text" class="form-control" id="updateId" formControlName="id" readonly>
+        </div>
+        <div formArrayName="orderProducts">
+          <div *ngFor="let item of updateOrderProducts.controls; let i=index" [formGroupName]="i" class="mb-3">
+            <div class="row">
+              <div class="col">
+                <label [for]="'updateProductId' + i" class="form-label">Product ID</label>
+                <input type="number" class="form-control" [id]="'updateProductId' + i" formControlName="productId" required>
+                <div *ngIf="updateOrderProducts.at(i).get('productId')?.invalid && updateOrderProducts.at(i).get('productId')?.touched" class="text-danger">
+                  Product ID is required.
+                </div>
+              </div>
+              <div class="col">
+                <label [for]="'updateQuantity' + i" class="form-label">Quantity</label>
+                <input type="number" class="form-control" [id]="'updateQuantity' + i" formControlName="quantity" required>
+                <div *ngIf="updateOrderProducts.at(i).get('quantity')?.invalid && updateOrderProducts.at(i).get('quantity')?.touched" class="text-danger">
+                  Quantity is required and must be at least 1.
+                </div>
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-danger mt-4" (click)="removeProduct(updateForm, i)">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary me-2" (click)="addProduct(updateForm)">Add Product</button>
+        <button type="submit" class="btn btn-success me-2" [disabled]="updateForm.invalid">Update Order</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Cards -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div *ngFor="let order of orders$ | async" class="col">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Order #{{ order.id }}</h5>
+          <p class="card-text"><strong>Date:</strong> {{ order.orderDate | date }}</p>
+          <p class="card-text"><strong>Total Price:</strong> {{ order.totalPrice | currency }}</p>
+          <p class="card-text"><strong>Products:</strong></p>
+          <ul>
+            <li *ngFor="let op of order.orderProducts">
+              {{ op.product.title }} (x{{ op.quantity }})
+            </li>
+          </ul>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-info me-2" (click)="showUpdateOrderForm(order)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteOrder(order.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

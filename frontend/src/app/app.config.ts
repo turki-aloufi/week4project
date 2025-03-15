@@ -6,8 +6,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { ProductEffects } from './state/product/products.effects';
-import { productReducer } from './state/product/products.reducer';
+import { ProductEffects } from './state/product/product.effects';
+import { productReducer } from './state/product/product.reducer';
 import { orderReducer } from './state/order/order.reducer';
 import { OrderEffects } from './state/order/order.effects';
 

@@ -1,8 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { Order } from '../../services/order/order.service'; // Adjust path
+import { Order } from '../../services/order/order.service';
 import * as OrderActions from './order.actions';
-import { createFeatureSelector } from '@ngrx/store';
 
 export interface OrderState extends EntityState<Order> {
   loading: boolean;
@@ -36,6 +35,16 @@ export const orderReducer = createReducer(
     loading: false,
     error,
   })),
+  on(OrderActions.updateOrder, (state) => ({ ...state, loading: true, error: null })),
+  on(OrderActions.updateOrderSuccess, (state, { id }) => ({
+    ...state,
+    loading: false,
+  })),
+  on(OrderActions.updateOrderFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
   on(OrderActions.deleteOrder, (state) => ({ ...state, loading: true, error: null })),
   on(OrderActions.deleteOrderSuccess, (state, { id }) =>
     adapter.removeOne(id, { ...state, loading: false })
@@ -46,3 +55,5 @@ export const orderReducer = createReducer(
     error,
   }))
 );
+
+export const { selectAll } = adapter.getSelectors();

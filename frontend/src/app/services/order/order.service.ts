@@ -23,15 +23,20 @@ export interface Order {
   orderProducts: OrderProduct[];
 }
 
-export interface OrderCreateDto {
-  orderProducts: { productId: number; quantity: number }[];
+export interface OrderProductDto {
+  productId: number;
+  quantity: number;
+}
+
+export interface OrderDto {
+  products: OrderProductDto[]; 
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
-  private apiUrl = 'https://localhost:7160/api/Order';
+  private apiUrl = 'https://localhost:7160/api/Order'; 
 
   constructor(private http: HttpClient) {}
 
@@ -43,11 +48,11 @@ export class OrderService {
     return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
-  createOrder(order: OrderCreateDto): Observable<Order> {
+  createOrder(order: OrderDto): Observable<Order> { 
     return this.http.post<Order>(this.apiUrl, order);
   }
 
-  updateOrder(id: number, order: OrderCreateDto): Observable<void> {
+  updateOrder(id: number, order: OrderDto): Observable<void> { 
     return this.http.put<void>(`${this.apiUrl}/${id}`, order);
   }
 
