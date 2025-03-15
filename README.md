@@ -21,14 +21,14 @@ This is a full-stack e-commerce application built with Angular (frontend) and .N
 ## Tech Stack
 
 - **Frontend**:
-  - Angular 17 (Standalone Components)
+  - Angular 19 (Standalone Components)
   - NgRx (State Management)
   - Bootstrap 5 (Styling)
   - TypeScript
 - **Backend**:
   - .NET Core 8 (ASP.NET Core Web API)
   - Entity Framework Core (Database Access)
-  - SQLite (Database, configurable to others)
+  - SQL Server (Database)
 - **Tools**:
   - npm (Frontend Package Manager)
   - .NET CLI (Backend Builds)
@@ -72,7 +72,7 @@ e-commerce-fullstack/
 - **Node.js**: v18.x or later
 - **npm**: v9.x or later
 - **.NET SDK**: 8.0 or later
-- **SQLite**: Used as the default database (or configure another DB)
+- **SQL Server**: Used as the default database (or configure another DB)
 
 ## Setup Instructions
 
@@ -105,7 +105,7 @@ e-commerce-fullstack/
      ```bash
      dotnet run --launch-profile https
      ```
-   - API will be available at `https://localhost:7160/api/Product`.
+   - API will be available at `https://localhost:5113/api/Product`.
 
 3. **OrderMicroService**:
    - Navigate to the directory:
